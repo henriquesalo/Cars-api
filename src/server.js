@@ -84,6 +84,11 @@ app.get('/wp/types', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`API-Carros rodando na porta ${PORT}`);
-});
+
+if (process.argv[1] === __filename) {
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`API-Carros rodando na porta ${PORT}`);
+  });
+}
+
+export default app;
