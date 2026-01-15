@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Muvve Cars</title>
+    <link rel="icon" type="image/x-icon" href="/imgs/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --primary: #3b82f6;
+        --primary-hover: #2563eb;
+        --bg-color: #969494;
+        --card-bg: #ffffff;
+        --text-main: #111827;
+        --text-secondary: #6b7280;
+        --border-color: #e5e7eb;
+        --bg-light: #f9fafb;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background: var(--bg-color);
+        color: var(--text-main);
+        margin: 0;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      header {
+        background: var(--card-bg);
+        padding: 32px 24px;
+        text-align: center;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        margin-bottom: 32px;
+      }
+
+      header h1 {
+        margin: 16px 0 8px;
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-main);
+      }
+
+      header p {
+        margin: 0;
+        color: var(--text-secondary);
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 24px 48px;
+      }
+
+      .card {
+        background: var(--card-bg);
+        border-radius: 16px;
+        padding: 32px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        margin-bottom: 24px;
+        border: 1px solid rgba(255,255,255,0.1);
+      }
+
+      h2 {
+        margin-top: 0;
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      /* Custom Checkbox */
+      .checkbox-wrapper {
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+      }
+      
+      .checkbox-wrapper input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+      }
+      
+      .checkmark {
+        height: 20px;
+        width: 20px;
+        background-color: #fff;
+        border: 2px solid var(--border-color);
+        border-radius: 4px;
+        margin-right: 10px;
+        position: relative;
+        transition: all 0.2s ease;
+      }
+      
+      .checkbox-wrapper:hover input ~ .checkmark {
+        border-color: var(--primary);
+      }
+      
+      .checkbox-wrapper input:checked ~ .checkmark {
+        background-color: var(--primary);
+        border-color: var(--primary);
+      }
+      
+      .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+        left: 6px;
+        top: 2px;
+        width: 4px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+      }
+      
+      .checkbox-wrapper input:checked ~ .checkmark:after {
+        display: block;
+      }
+
+      /* Car List */
+      .car-list {
+        max-height: 500px;
+        overflow-y: auto;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        background: var(--bg-light);
+      }
+      
+      /* Scrollbar Styling */
+      .car-list::-webkit-scrollbar {
+        width: 8px;
+      }
+      .car-list::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .car-list::-webkit-scrollbar-thumb {
+        background-color: #d1d5db;
+        border-radius: 20px;
+      }
+
+      .car-item {
+        display: flex;
+        align-items: center;
+        padding: 16px;
+        border-bottom: 1px solid var(--border-color);
+        background: var(--card-bg);
+        transition: background 0.2s;
+      }
+
+      .car-item:last-child {
+        border-bottom: none;
+      }
+
+      .car-item:hover {
+        background: #f3f4f6;
+      }
+
+      .car-thumb {
+        width: 64px;
+        height: 64px;
+        border-radius: 8px;
+        object-fit: cover;
+        margin-right: 16px;
+        background: #e5e7eb;
+        border: 1px solid var(--border-color);
+      }
+
+      .car-info {
+        flex: 1;
+      }
+
+      .car-title {
+        font-weight: 600;
+        font-size: 16px;
+        color: var(--text-main);
+        margin-bottom: 4px;
+      }
+
+      .car-details {
+        font-size: 14px;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .platforms-container {
+        margin-top: 8px;
+        display: flex;
+        gap: 6px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+        color: #fff;
+        text-transform: uppercase;
+        line-height: 1.4;
+      }
+
+      .badge-webmotors { background-color: var(--danger); }
+      .badge-carrosp { background-color: var(--warning); }
+      .badge-napista { background-color: var(--primary); }
+      .badge-none { background-color: #9ca3af; }
+
+      /* Select All Header */
+      .list-header {
+        padding: 16px;
+        background: var(--bg-light);
+        border-bottom: 1px solid var(--border-color);
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+        display: flex;
+        align-items: center;
+      }
+
+      /* Portal Selection Grid */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 16px;
+      }
+
+      .portal-option {
+        position: relative;
+      }
+
+      .portal-option input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .portal-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        background: var(--bg-light);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        height: 100%;
+        text-align: center;
+        font-weight: 600;
+        color: var(--text-secondary);
+      }
+
+      .portal-option input:checked + .portal-card {
+        border-color: var(--primary);
+        background: #eff6ff;
+        color: var(--primary);
+        box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.1);
+      }
+
+      .portal-card:hover {
+        border-color: #d1d5db;
+      }
+      
+      .portal-option input:checked + .portal-card:hover {
+        border-color: var(--primary);
+      }
+
+      /* Buttons */
+      .actions {
+        margin-top: 32px;
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+      }
+
+      button {
+        padding: 14px 28px;
+        border: none;
+        border-radius: 8px;
+        background: var(--primary);
+        color: white;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 16px;
+        transition: background 0.2s;
+        box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+      }
+
+      button:hover {
+        background: var(--primary-hover);
+      }
+
+      button.secondary {
+        background: #4b5563;
+        box-shadow: 0 4px 6px -1px rgba(75, 85, 99, 0.2);
+      }
+      
+      button.secondary:hover {
+        background: #374151;
+      }
+
+      .result {
+        margin-top: 24px;
+        min-height: 24px;
+        text-align: center;
+        font-weight: 500;
+      }
+      
+      .success-text { color: var(--success); }
+      .error-text { color: var(--danger); }
+
+      footer {
+        opacity: .7;
+        text-align: center;
+        padding: 48px 24px;
+        color: #fff;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img src="/imgs/Muvve-car-Logo-quadrado.png" alt="MuvveCarsLogo" style="width:80px;height:80px;border-radius:12px;">
+      <h1>Distribuidor de Anúncios</h1>
+      <p>Sincronize seu estoque do WordPress com os principais portais automotivos</p>
+    </header>
+
+    <div class="container">
+      
+      <!-- Section de Car Selection  -->
+      <div class="card" id="carsCard">
+        <h2>
+          <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+          Selecione os Carros
+        </h2>
+        
+        <div class="car-list" id="carListContainerWrapper">
+           <div class="list-header">
+             <label class="checkbox-wrapper">
+               <input type="checkbox" id="selectAllCars">
+               <span class="checkmark"></span>
+               <span style="font-weight: 600; font-size: 14px;">Selecionar Todos</span>
+             </label>
+             <span id="totalCarsBadge" style="margin-left: auto; background: var(--bg-color); color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px;">0 carros</span>
+           </div>
+           <div id="carListContainer">
+             <div style="padding: 32px; text-align: center; color: var(--text-secondary);">
+               <svg class="animate-spin" style="animation: spin 1s linear infinite; margin-bottom: 8px;" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+               </svg>
+               <p>Carregando inventário...</p>
+             </div>
+           </div>
+        </div>
+        <p id="wpInfo" style="margin-top:12px; text-align: right; font-size: 13px; color: var(--text-secondary);"></p>
+      </div>
+
+      <!-- Section de Seleção de Portal -->
+      <div class="card">
+        <h2>
+          <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+          Escolha os Portais
+        </h2>
+        <form id="formPortais">
+          <div class="grid">
+            <label class="portal-option">
+              <input type="checkbox" name="targets" value="webmotors">
+              <div class="portal-card">
+                <span>Webmotors</span>
+              </div>
+            </label>
+            <label class="portal-option">
+              <input type="checkbox" name="targets" value="carrosp">
+              <div class="portal-card">
+                <span>CarrosP</span>
+              </div>
+            </label>
+            <label class="portal-option">
+              <input type="checkbox" name="targets" value="napista">
+              <div class="portal-card">
+                <span>NaPista</span>
+              </div>
+            </label>
+          </div>
+          
+          <div class="result" id="result"></div>
+          
+          <div class="actions">
+            <button type="submit">Iniciar Integração</button>
+            <button type="button" class="secondary" id="btnHealth">Status API</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <footer>
+      <p>&copy; 2026 Muvve Cars • Painel de Integração v1.2</p>
+    </footer>
+
+    <style>
+      @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+    </style>
+
+    <script>
+      const apiBase = 'http://localhost:3001';
+      
+      function handleCarImageError(img) {
+        const list = img.dataset.images ? img.dataset.images.split('|') : [];
+        let index = parseInt(img.dataset.index || '0', 10);
+        index += 1;
+        if (list[index]) {
+          img.dataset.index = String(index);
+          img.src = '/proxy-image?url=' + encodeURIComponent(list[index]);
+        } else {
+          img.onerror = null;
+          img.src = 'https://via.placeholder.com/150?text=Sem+Foto';
+        }
+      }
+
+      async function loadCars(){
+        const infoEl = document.getElementById('wpInfo');
+        const container = document.getElementById('carListContainer');
+        const badge = document.getElementById('totalCarsBadge');
+        
+        try {
+          const resp = await fetch(apiBase + '/cars');
+          const data = await resp.json();
+          if (resp.ok) {
+            infoEl.textContent = `Última atualização: ${new Date().toLocaleTimeString()}`;
+            badge.textContent = `${data.total} carros`;
+            renderCars(data.cars);
+          } else {
+            infoEl.textContent = 'Erro ao consultar WordPress';
+            container.innerHTML = '<div style="padding:32px; text-align:center; color: #ef4444;"><p>Falha ao carregar dados.</p><small>' + (data.error || '') + '</small></div>';
+          }
+        } catch(err){
+          infoEl.textContent = 'Erro de conexão';
+          container.innerHTML = '<div style="padding:32px; text-align:center; color: #ef4444;"><p>Não foi possível conectar ao servidor.</p><small>Verifique se a API está rodando.</small></div>';
+        }
+      }
+
+      function renderCars(cars) {
+        const container = document.getElementById('carListContainer');
+        container.innerHTML = '';
+        
+        if (cars.length === 0) {
+          container.innerHTML = '<p style="padding:32px; text-align:center; color: var(--text-secondary);">Nenhum carro encontrado no estoque.</p>';
+          return;
+        }
+
+        cars.forEach(car => {
+          const div = document.createElement('div');
+          div.className = 'car-item';
+          
+          // Format price
+          const price = car.price ? parseFloat(car.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 'Preço sob consulta';
+          
+          // Platforms badges
+          let platformsHtml = '';
+          if (car.platforms && car.platforms.length > 0) {
+            car.platforms.forEach(p => {
+              platformsHtml += `<span class="badge badge-${p}">${p}</span>`;
+            });
+          } else {
+            platformsHtml = `<span class="badge badge-none">Pendente</span>`;
+          }
+
+          let imageCandidates = [];
+          if (car.images && car.images.length > 0) {
+            const pushIfValid = (url) => {
+              if (!url) return;
+              const s = String(url);
+              if (s.includes('logo-pantera-site.png')) return;
+              imageCandidates.push(s);
+            };
+            if (car.images.length > 1) pushIfValid(car.images[1]);
+            pushIfValid(car.images[0]);
+            for (let i = 2; i < car.images.length; i++) {
+              pushIfValid(car.images[i]);
+            }
+          }
+          let imgUrl = 'https://via.placeholder.com/150?text=Sem+Foto';
+          if (imageCandidates.length > 0) {
+            imgUrl = '/proxy-image?url=' + encodeURIComponent(imageCandidates[0]);
+          }
+          const dataImages = imageCandidates.map(u => String(u).replace(/"/g, '&quot;')).join('|');
+
+          div.innerHTML = `
+            <label class="checkbox-wrapper" style="margin-right: 16px;">
+              <input type="checkbox" name="selectedCars" value="${car.id}">
+              <span class="checkmark"></span>
+            </label>
+            <img src="${imgUrl}" alt="${car.title}" class="car-thumb" data-images="${dataImages}" data-index="0" onerror="handleCarImageError(this)">
+            <div class="car-info">
+              <div class="car-title">${car.title}</div>
+              <div class="car-details">
+                <span>${car.model || 'Modelo N/A'}</span>
+                <span>•</span>
+                <span>${car.year || 'Ano N/A'}</span>
+                <span>•</span>
+                <span style="font-weight:600; color: var(--text-main);">${price}</span>
+              </div>
+              <div class="platforms-container">${platformsHtml}</div>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+      }
+
+      // Handle Select All
+      document.getElementById('selectAllCars').addEventListener('change', (e) => {
+        const checkboxes = document.querySelectorAll('input[name="selectedCars"]');
+        checkboxes.forEach(cb => cb.checked = e.target.checked);
+      });
+
+      // Handle Form Submit
+      document.getElementById('formPortais').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const targets = Array.from(document.querySelectorAll('input[name="targets"]:checked')).map(i => i.value);
+        const selectedCarIds = Array.from(document.querySelectorAll('input[name="selectedCars"]:checked')).map(i => i.value);
+        
+        const resEl = document.getElementById('result');
+        
+        if (targets.length === 0) {
+          resEl.innerHTML = '<span class="error-text">Selecione pelo menos um portal de destino.</span>';
+          return;
+        }
+        
+        if (selectedCarIds.length === 0) {
+          resEl.innerHTML = '<span class="error-text">Selecione pelo menos um carro para anunciar.</span>';
+          return;
+        }
+
+        const btn = e.target.querySelector('button[type="submit"]');
+        const originalText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Processando...';
+        resEl.innerHTML = '<span style="color:var(--text-secondary)">Iniciando sincronização...</span>';
+        
+        try {
+          const resp = await fetch(apiBase + '/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ targets, selectedCarIds })
+          });
+          const data = await resp.json();
+          if (resp.ok) {
+            const ok = data.results.filter(r => r.status === 'success').length;
+            const errors = data.results.filter(r => r.status === 'error').length;
+            
+            let msg = `<span class="success-text">Processo finalizado!</span> <br> Sucesso: <b>${ok}</b> | Erros: <b>${errors}</b>`;
+            if (errors > 0) msg += '<br><small style="color:var(--danger)">Verifique o console para detalhes dos erros.</small>';
+            
+            resEl.innerHTML = msg;
+            
+            // Refresh list to update badges
+            loadCars();
+          } else {
+            resEl.innerHTML = `<span class="error-text">Erro: ${data.error || 'Falha desconhecida'}</span>`;
+          }
+        } catch(err){
+          resEl.innerHTML = `<span class="error-text">Erro de conexão: ${err.message}</span>`;
+        } finally {
+          btn.disabled = false;
+          btn.textContent = originalText;
+        }
+      });
+
+      // Initial Load
+      loadCars();
+
+      // Health Check
+      document.getElementById('btnHealth').addEventListener('click', async () => {
+        const resEl = document.getElementById('result');
+        const btn = document.getElementById('btnHealth');
+        const originalText = btn.textContent;
+        
+        btn.textContent = '...';
+        try { 
+          const resp = await fetch(apiBase + '/health'); 
+          const data = await resp.json(); 
+          resEl.innerHTML = `<span class="success-text">API Online: ${data.status}</span>`; 
+        } catch(err){ 
+          resEl.innerHTML = `<span class="error-text">API Offline: ${err.message}</span>`; 
+        } finally {
+          btn.textContent = originalText;
+        }
+      });
+    </script>
+  </body>
+</html>
