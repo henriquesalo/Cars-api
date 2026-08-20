@@ -1,8 +1,7 @@
-# Cars API — Distribuidor de Anúncios (Muvve Cars)
-
+# Cars API — Distribuidor de Anúncios
 API + painel web que sincroniza o estoque de veículos de um site **WordPress** (via REST API ou scraping da página de estoque) e distribui os anúncios para múltiplos portais automotivos — **Webmotors**, **CarrosP** e **NaPista**.
 
-O projeto tem duas frentes: uma **API em Express** que busca, normaliza e publica os carros, e um **painel HTML/JS simples** (`public/index.html`, marca "Muvve Cars") onde o usuário seleciona quais carros e para quais portais sincronizar.
+O projeto tem duas frentes: uma **API em Express** que busca, normaliza e publica os carros, e um **painel HTML/JS simples** (`public/index.html`, de nome fictício "Muvve Cars") onde o usuário seleciona quais carros e para quais portais sincronizar.
 
 ## Índice
 
@@ -15,7 +14,6 @@ O projeto tem duas frentes: uma **API em Express** que busca, normaliza e public
 - [Rodando localmente](#rodando-localmente)
 - [Deploy (Vercel)](#deploy-vercel)
 - [Status dos portais / limitações conhecidas](#status-dos-portais--limitações-conhecidas)
-- [Segurança](#segurança)
 
 ## Como funciona
 
@@ -148,9 +146,3 @@ O projeto já está preparado para deploy serverless na Vercel:
 - A extração de dados por regex (`extractCarFieldsFromText`) é uma heurística best-effort para quando o WordPress não expõe campos ACF estruturados — pode falhar ou extrair valores incorretos em anúncios com texto fora do padrão esperado.
 - O scraping de fallback (`fetchCarsFromStockPage`) depende da estrutura HTML do site de estoque e pode quebrar se o tema/layout do site mudar.
 - Não há autenticação no painel web nem nos endpoints da API — qualquer pessoa com acesso à URL pode disparar `/sync`.
-
-## Segurança
-
-- **Nunca commite o arquivo `.env`.** Ele deve conter apenas segredos locais e estar listado no `.gitignore`.
-- Use um arquivo `.env.example` (sem valores reais) para documentar quais variáveis são necessárias.
-- Se qualquer credencial (usuário/senha do WordPress, chaves de API dos portais) já tiver sido commitada em algum momento, ela deve ser considerada **comprometida**: revogue/gere uma nova credencial, mesmo após remover o arquivo do repositório, pois ela permanece no histórico do git.
